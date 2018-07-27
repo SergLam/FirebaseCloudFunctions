@@ -1,23 +1,27 @@
 // Firebase App is always required and must be first
-const firebase = require("firebase");
+const firebase = require('firebase');
 // Add additional services that you want to use
-const admin = require('firebase-admin');
-const functions = require('firebase-functions');
-// require("firebase-auth");
-// require("firebase-database");
-// require("firebase-firestore");
-// require("firebase-messaging");
-// require("firebase-functions");
+const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 
-// if (!firebase.apps.length) {
-//   admin.initializeApp(functions.config().firebase);
-// }
+var serviceAccount = require("../../fir-auth-training-firebase-adminsdk-6v07r-9cc21f3844.json");
+
+try {
+  admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://fir-auth-training.firebaseio.com"
+});
+
+} catch (e) { console.log(e) }
+
 
 exports = module.exports = functions.auth.user().onCreate(event => {
+
   const config = functions.config();
 
   const user = event.data;
-  const userRef = admin.database().ref('/users').child(user.uid);
+  const db = firebase.firestore();
+  const users = db.collection('users')
 
-  return userRef.update(user);
+  return users.add(user);
 });
