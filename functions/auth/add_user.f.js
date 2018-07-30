@@ -4,24 +4,38 @@ const firebase = require('firebase');
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 
-var serviceAccount = require("../../fir-auth-training-firebase-adminsdk-6v07r-9cc21f3844.json");
+var serviceAccount = require('./firebase-adminsdk.json');
+var app;
 
-try {
-  admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://fir-auth-training.firebaseio.com"
-});
+if(!firebase.apps.length){
+  try {
+    app = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://fir-auth-training.firebaseio.com"
+  });
+  } catch (e) { console.log(e) }
+}
 
-} catch (e) { console.log(e) }
+const firestore = app.firestore();
+const settings = {timestampsInSnapshots: true};
+firestore.settings(settings);
 
+exports = module.exports = functions.auth.user().onCreate(user => {
 
-exports = module.exports = functions.auth.user().onCreate(event => {
+  const uid = user.uid;
+  const email = (typeof user.email === 'undefined') ? null : user.email; // The email of the user.
+  const displayName = (typeof user.displayName === 'undefined') ? null : user.displayName; // The display name of the user.
+  const photoURL = (typeof user.providerData.photoURL === 'undefined') ? null : user.providerData.photoURL;
+  const createdAt= (typeof user.metadata.creationTime === 'undefined') ? null : user.metadata.creationTime;
+  const lastSignInTime = (typeof user.metadata.lastSignInTime === 'undefined') ? null : user.metadata.lastSignInTime;
+  const users = firestore.collection('users');
 
-  const config = functions.config();
-
-  const user = event.data;
-  const db = firebase.firestore();
-  const users = db.collection('users')
-
-  return users.add(user);
+  return users.doc(uid).set({
+      uid: uid,
+      created: createdAt,
+      email: email,
+      displayName: displayName,
+      photoURL: photoURL,
+      lastSignInTime: lastSignInTime
+    });
 });
