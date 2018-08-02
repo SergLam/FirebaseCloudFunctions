@@ -18,3 +18,10 @@ for(let f=0,fl=files.length; f<fl; f++){
     exports[functionName] = require(file);
   }
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === "is_undefined") {
+  const helper_module = require("./helpers/helper.js");
+  exports.is_undefined = function is_undefined(param) {
+     helper_module.handler(param);
+  };
+}

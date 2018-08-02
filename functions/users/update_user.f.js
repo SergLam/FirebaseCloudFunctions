@@ -31,7 +31,7 @@ const displayName = helper.is_undefined(user.displayName);
 const photoURL = helper.is_undefined(user.photoURL);
 const lastSignInTime = helper.is_undefined(user.lastSignInTime);
 
-return users.doc(uid).update({
+users.doc(uid).update({
     uid: uid,
     createdAt: createdAt,
     email: email,
@@ -39,4 +39,6 @@ return users.doc(uid).update({
     photoURL: photoURL,
     lastSignInTime: lastSignInTime
   });
+res.status(200).send({ message: "user updated" });
+return;
 });

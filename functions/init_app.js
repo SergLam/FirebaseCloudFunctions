@@ -16,6 +16,11 @@ exports.init_app = function init_app() {
       databaseURL: "https://fir-auth-training.firebaseio.com"
     });
     } catch (e) { console.log(e) }
+
+    // const firestore = admin.firestore();
+    // const settings = {timestampsInSnapshots: true};
+    // firestore.settings(settings);
+
   }
   return admin;
 };
