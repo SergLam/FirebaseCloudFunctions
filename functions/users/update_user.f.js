@@ -12,15 +12,19 @@ var user = {};
 if (req.body.hasOwnProperty("uid")) {
   uid = req.body.uid;
 } else {
-  res.status(400).send({ error: "uid field is missing" });
-  return;
+  return res.status(400).send({ error: "uid field is missing" });
 }
 
 if (req.body.hasOwnProperty("user")) {
   user = req.body.user;
 } else {
-  res.status(400).send({ error: "user object is missing" });
-  return;
+  return res.status(400).send({ error: "user object is missing" });
+}
+
+if (req.body.user.hasOwnProperty("email")) {
+  user["email"] = req.body.user.email;
+} else {
+  return res.status(400).send({ error: "user email is missing" });
 }
 
 const users = firestore.collection('users');
@@ -39,6 +43,5 @@ users.doc(uid).update({
     photoURL: photoURL,
     lastSignInTime: lastSignInTime
   });
-res.status(200).send({ message: "user updated" });
-return;
+return res.status(200).send({ message: "user updated" });
 });
