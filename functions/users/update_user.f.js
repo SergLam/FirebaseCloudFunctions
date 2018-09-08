@@ -29,19 +29,35 @@ if (req.body.user.hasOwnProperty("email")) {
 
 const users = firestore.collection('users');
 
-const createdAt = helper.is_undefined(user.createdAt);
-const email = helper.is_undefined(user.email);
-const displayName = helper.is_undefined(user.displayName);
-const photoURL = helper.is_undefined(user.photoURL);
-const lastSignInTime = helper.is_undefined(user.lastSignInTime);
+var getDoc = users.doc(uid).get()
+    .then(doc => {
+        if (!doc.exists) {
+            return res.status(400).send({ error: "no such user" });
+        } else {
+          const createdAt = helper.is_undefined(user.createdAt);
+          const email = helper.is_undefined(user.email);
+          const displayName = helper.is_undefined(user.displayName);
+          const photoURL = helper.is_undefined(user.photoURL);
+          const lastSignInTime = helper.is_undefined(user.lastSignInTime);
+          const longitude = helper.is_undefined(user.location.longitude);
+          const latitude = helper.is_undefined(user.location.latitude);
 
-users.doc(uid).update({
-    uid: uid,
-    createdAt: createdAt,
-    email: email,
-    displayName: displayName,
-    photoURL: photoURL,
-    lastSignInTime: lastSignInTime
-  });
-return res.status(200).send({ message: "user updated" });
+          users.doc(uid).set({
+              uid: uid,
+              createdAt: createdAt,
+              email: email,
+              displayName: displayName,
+              photoURL: photoURL,
+              lastSignInTime: lastSignInTime,
+              location: {
+                latitude: latitude,
+                longitude: longitude
+              }
+            });
+          return res.status(200).send({ message: "user updated" });
+        }
+    })
+    .catch(err => {
+        return console.log('Error getting document', err);
+    });
 });
