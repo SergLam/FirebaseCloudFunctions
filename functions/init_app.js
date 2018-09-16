@@ -5,7 +5,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const serviceAccount = require('./firebase-adminsdk.json');
 
-exports.init_app = function init_app() {
+module.exports.init_app = function init_app() {
 
   var app = firebase.apps[0];
 
@@ -21,5 +21,5 @@ exports.init_app = function init_app() {
   // const firestore = admin.firestore();
   // const settings = {timestampsInSnapshots: true};
   // firestore.settings(settings);
-  return admin;
+  return app;
 };

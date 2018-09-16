@@ -1,11 +1,20 @@
-const init = require('../init_app.js');
-const functions = require('firebase-functions');
-const admin = init.init_app();
-const firestore = admin.firestore();
 const helper = require('../helpers/helper.js');
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const serviceAccount = require('../firebase-adminsdk.json');
+const firebase = require("firebase");
+try {
+  admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://fir-auth-training.firebaseio.com"
+});
+} catch (e) {
+  console.log(e);
+}
+const firestore = admin.firestore();
+const init = require('../init_app.js');
 
 module.exports = functions.https.onRequest((req, res) => {
-
 var email = "";
 
 if (req.body.hasOwnProperty("email")) {
@@ -45,7 +54,7 @@ var promise = users.where('email', '==', email).get()
             longitude: longitude
           }
         });
-        
+
         isUpdated = true;
         updatedUser = doc.data();
     }
