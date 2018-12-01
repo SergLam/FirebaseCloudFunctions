@@ -1,6 +1,6 @@
 const helper = require('../helpers/helper.js');
 
-exports.handler = function(req, res, firestore, firebase, auth) {
+exports.handler = function(req, res, firestore, firebase, app) {
   var email = "";
   var password = "";
   const usersRef = firestore.collection('users');
@@ -17,7 +17,7 @@ exports.handler = function(req, res, firestore, firebase, auth) {
     return res.status(400).send({ error: "password field is missing" });
   }
 
-  auth.signInWithEmailAndPassword(email, password)
+  app.auth().signInWithEmailAndPassword(email, password)
     .then(userCredential  => {
       var user = ""
       // Search by email in collection
@@ -32,7 +32,7 @@ exports.handler = function(req, res, firestore, firebase, auth) {
         if(user === ""){
           return res.status(400).send({ message: "email not registered" });
         }else{
-          return res.status(200).send(user);
+          return res.status(200).send({ "user" : user});
         }
       })
       .catch(err => {

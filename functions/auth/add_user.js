@@ -1,3 +1,5 @@
+const helper = require('../helpers/helper.js');
+
 exports.handler = function(user, firestore) {
 
   const uid = helper.is_undefined(user.uid);

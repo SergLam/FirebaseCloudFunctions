@@ -13,7 +13,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const serviceAccount = require('./firebase-adminsdk.json');
 const firebase = require("firebase");
-const app = admin.initializeApp({
+const app = firebase.initializeApp({
 credential: admin.credential.cert(serviceAccount),
 databaseURL: "https://fir-auth-training.firebaseio.com",
 apiKey: 'AIzaSyDngcjhPoyl_cct51Y_4gVNAVDSh4ihmlk',
@@ -36,7 +36,7 @@ exports.add_user = functions.auth.user().onCreate((user, firestore) => {
 });
 
 exports.sign_in = functions.https.onRequest((req, res) => {
-    sign_in.handler(req, res, firestore, firebase, auth);
+    sign_in.handler(req, res, firestore, firebase, app);
 });
 
 exports.sign_up = functions.https.onRequest((req, res) => {
