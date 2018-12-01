@@ -1,4 +1,5 @@
 const helper = require('../helpers/helper.js');
+const admin = require('firebase-admin');
 
 exports.handler = function(req, res, firestore, firebase) {
   var email = "";

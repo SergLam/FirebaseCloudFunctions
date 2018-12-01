@@ -33,7 +33,6 @@ exports.handler = function(req, res, firestore, firebase) {
     .catch(err => {
       console.log('Error getting documents', err);
     });
-
   } else {
     return res.status(400).send({ message: "invalid email" });
   }

@@ -19,11 +19,30 @@ exports.handler = function(req, res, firestore, firebase) {
 
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(userCredential  => {
+      var user = ""
+      // Search by email in collection
+      var promise = usersRef.where('email', '==', email).get()
+        .then(snapshot => {
+        snapshot.forEach(doc => {
+          if(doc.data().email === email){
+            user = doc.data();
+          }
+        });
+        // RETURN RESULT AFTER THEN (OR THROW)!!
+        if(user === ""){
+          return res.status(400).send({ message: "email not registered" });
+        }else{
+          return res.status(200).send(user);
+        }
+      })
+      .catch(err => {
+        console.log('Error getting documents', err);
+      });
       return res.status(200).send(userCredential);
     })
     .catch(function(error) {
         // Handle Errors here.
-        return res.status(400).send({ error: error.code+"\n"+error.message });
+        return res.status(400).send({ error: error.message });
     });
 
 }
