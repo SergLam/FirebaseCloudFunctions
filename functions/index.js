@@ -13,7 +13,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const serviceAccount = require('./firebase-adminsdk.json');
 const firebase = require("firebase");
-const app = firebase.initializeApp({
+const app = admin.initializeApp({
 credential: admin.credential.cert(serviceAccount),
 databaseURL: "https://fir-auth-training.firebaseio.com",
 apiKey: 'AIzaSyDngcjhPoyl_cct51Y_4gVNAVDSh4ihmlk',
@@ -21,8 +21,9 @@ authDomain: 'https://accounts.google.com/o/oauth2/auth',
 projectId: 'fir-auth-training'
 });
 
-const firestore = firebase.firestore();
-const database = firebase.database();
+const firestore = app.firestore();
+const database = app.database();
+const auth = app.auth();
 
 // Disable deprecated features
 firestore.settings({
@@ -35,11 +36,11 @@ exports.add_user = functions.auth.user().onCreate((user, firestore) => {
 });
 
 exports.sign_in = functions.https.onRequest((req, res) => {
-    sign_in.handler(req, res, firestore, firebase);
+    sign_in.handler(req, res, firestore, firebase, auth);
 });
 
 exports.sign_up = functions.https.onRequest((req, res) => {
-    sign_up.handler(req, res, firestore, firebase);
+    sign_up.handler(req, res, firestore, firebase, auth);
 });
 
 exports.get_user_by_email = functions.https.onRequest((req, res) => {

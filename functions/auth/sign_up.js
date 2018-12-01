@@ -1,7 +1,6 @@
 const helper = require('../helpers/helper.js');
-const admin = require('firebase-admin');
 
-exports.handler = function(req, res, firestore, firebase) {
+exports.handler = function(req, res, firestore, firebase, auth) {
   var email = "";
   var password = "";
   const usersRef = firestore.collection('users');
@@ -64,7 +63,7 @@ exports.handler = function(req, res, firestore, firebase) {
            }
          };
         // Add user to auth table
-        admin.auth().createUser({
+        auth.createUser({
           uid: newUserRef.id,
           email: email,
           emailVerified: false,

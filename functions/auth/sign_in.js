@@ -1,6 +1,6 @@
 const helper = require('../helpers/helper.js');
 
-exports.handler = function(req, res, firestore, firebase) {
+exports.handler = function(req, res, firestore, firebase, auth) {
   var email = "";
   var password = "";
   const usersRef = firestore.collection('users');
@@ -17,7 +17,7 @@ exports.handler = function(req, res, firestore, firebase) {
     return res.status(400).send({ error: "password field is missing" });
   }
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
+  auth.signInWithEmailAndPassword(email, password)
     .then(userCredential  => {
       var user = ""
       // Search by email in collection
