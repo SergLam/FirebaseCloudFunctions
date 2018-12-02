@@ -1,6 +1,7 @@
 const helper = require('../helpers/helper.js');
+const create_token = require('./create_token.js');
 
-exports.handler = function(req, res, firestore, firebase, app) {
+exports.handler = function(req, res, firestore, app) {
   var email = "";
   var password = "";
   const usersRef = firestore.collection('users');
@@ -19,13 +20,16 @@ exports.handler = function(req, res, firestore, firebase, app) {
 
   app.auth().signInWithEmailAndPassword(email, password)
     .then(userCredential  => {
+      const userRef = firestore.collection('users').doc(uid);
       var user = ""
       // Search by email in collection
       var promise = usersRef.where('email', '==', email).get()
         .then(snapshot => {
         snapshot.forEach(doc => {
           if(doc.data().email === email){
+            const token = create_token.createCustomToken(firestore, app, doc.data().uid)
             user = doc.data();
+            user['customToken'] = token
           }
         });
         // RETURN RESULT AFTER THEN (OR THROW)!!
@@ -38,7 +42,7 @@ exports.handler = function(req, res, firestore, firebase, app) {
       .catch(err => {
         console.log('Error getting documents', err);
       });
-      return res.status(200).send(userCredential);
+      return res.status(200).send({ "user" : user});
     })
     .catch(function(error) {
         // Handle Errors here.

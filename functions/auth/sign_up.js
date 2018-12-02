@@ -1,6 +1,6 @@
 const helper = require('../helpers/helper.js');
 
-exports.handler = function(req, res, firestore, firebase, auth) {
+exports.handler = function(req, res, firestore, auth) {
   var email = "";
   var password = "";
   const usersRef = firestore.collection('users');

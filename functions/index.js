@@ -36,11 +36,11 @@ exports.add_user = functions.auth.user().onCreate((user, firestore) => {
 });
 
 exports.sign_in = functions.https.onRequest((req, res) => {
-    sign_in.handler(req, res, firestore, firebase, app);
+    sign_in.handler(req, res, firestore, app);
 });
 
 exports.sign_up = functions.https.onRequest((req, res) => {
-    sign_up.handler(req, res, firestore, firebase, auth);
+    sign_up.handler(req, res, firestore, auth);
 });
 
 exports.get_user_by_email = functions.https.onRequest((req, res) => {
